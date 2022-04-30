@@ -1,4 +1,5 @@
 import { Message as RawMessage } from 'revolt-api/types/Channels'
+import { Embed } from 'revolt-api/types/January';
 import { User as RawUser } from 'revolt-api/types/Users'
 import { BaseManager } from '.'
 import { TypeError } from '../errors'
@@ -15,6 +16,7 @@ export interface MessageOptions {
     content: string
     replies?: unknown[]
     attachments?: string[]
+    embeds?: Embed[]
 }
 
 export interface SerachMessageQuery {
@@ -48,7 +50,7 @@ export class MessageManager extends BaseManager<string, Message, RawMessage> {
     }
 
     async send(_options: MessageOptions | string): Promise<Message> {
-        const { content, replies, attachments }: MessageOptions =
+        const { content, replies, attachments, embeds }: MessageOptions =
             typeof _options === 'object'
                 ? { ..._options }
                 : {
@@ -60,7 +62,8 @@ export class MessageManager extends BaseManager<string, Message, RawMessage> {
                 content,
                 nonce: UUID.generate(),
                 replies,
-                attachments
+                attachments,
+                embeds,
             }
         })
 
